@@ -1131,3 +1131,86 @@ body {
 .legend-item:nth-child(4) { animation-delay: 0.25s; }
 .legend-item:nth-child(5) { animation-delay: 0.3s; }
 .legend-item:nth-child(6) { animation-delay: 0.35s; }
+
+/* OpenClaw guide page */
+.install-guide {
+    gap: 1.2rem;
+    padding-bottom: 2rem;
+}
+
+.guide-header {
+    margin-top: 1rem;
+}
+
+.guide-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.guide-card h3 {
+    margin-bottom: 0.8rem;
+    color: var(--accent-cyan);
+}
+
+.guide-card h4 {
+    margin-top: 0.8rem;
+    margin-bottom: 0.4rem;
+    color: var(--accent-blue);
+}
+
+.toc-card ol,
+.guide-card ol,
+.guide-card ul {
+    padding-left: 1.2rem;
+}
+
+.toc-card a {
+    color: var(--accent-blue);
+}
+
+.guide-card pre {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.8rem;
+    overflow-x: auto;
+    margin: 0.6rem 0;
+}
+
+.guide-card code {
+    font-family: var(--font-mono);
+    color: #9ae6b4;
+}
+
+.callout {
+    margin-top: 0.8rem;
+    padding: 0.8rem;
+    border-left: 4px solid var(--accent-blue);
+    background: rgba(0, 212, 255, 0.1);
+    border-radius: 8px;
+}
+
+.callout.warning {
+    border-left-color: var(--warning);
+    background: rgba(237, 137, 54, 0.15);
+}
+
+.guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+}
+
+.guide-table th,
+.guide-table td {
+    border: 1px solid var(--border-color);
+    padding: 0.6rem;
+    text-align: left;
+}
+
+.guide-table th {
+    background: rgba(0, 212, 255, 0.12);
+}

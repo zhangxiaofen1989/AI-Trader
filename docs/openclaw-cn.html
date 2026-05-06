@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 安装中文指南</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="brand-icon">🛠️</span>
+                <h1>OpenClaw 中文安装站</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Asset Evolution</a></li>
+                <li><a href="portfolio.html" class="nav-link">Portfolio Analysis</a></li>
+                <li><a href="openclaw-cn.html" class="nav-link active">OpenClaw 安装指南</a></li>
+            </ul>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="github-link" aria-label="查看 GitHub">
+                <span class="github-text">查看官方仓库</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container container-padded install-guide">
+        <header class="page-header guide-header">
+            <h2>OpenClaw 一站式中文安装教程</h2>
+            <p class="subtitle">从零开始：环境准备、安装、配置、启动、排错、升级全覆盖</p>
+        </header>
+
+        <section class="guide-card toc-card">
+            <h3>目录导航</h3>
+            <ol>
+                <li><a href="#overview">项目说明与适用人群</a></li>
+                <li><a href="#requirements">安装前准备（系统与依赖）</a></li>
+                <li><a href="#method-a">方式 A：Docker 快速安装（推荐）</a></li>
+                <li><a href="#method-b">方式 B：源码安装（开发者常用）</a></li>
+                <li><a href="#config">配置详解（.env 与常见参数）</a></li>
+                <li><a href="#run">启动与验证</a></li>
+                <li><a href="#troubleshooting">故障排查清单</a></li>
+                <li><a href="#upgrade">升级与回滚策略</a></li>
+            </ol>
+        </section>
+
+        <section class="guide-card" id="overview">
+            <h3>1) 项目说明与适用人群</h3>
+            <p>本页面面向中文用户，目标是帮助你在 Windows / macOS / Linux 上完成 OpenClaw 部署。无论你是第一次接触，还是要在生产环境重装，都可以按照本文逐步执行。</p>
+            <div class="callout warning">提示：不同版本 OpenClaw 的依赖可能不完全一致，建议先在官方仓库确认版本说明，再执行下方命令。</div>
+        </section>
+
+        <section class="guide-card" id="requirements">
+            <h3>2) 安装前准备（系统与依赖）</h3>
+            <ul>
+                <li>操作系统：Ubuntu 22.04+ / macOS 13+ / Windows 11（建议 WSL2）。</li>
+                <li>Git：用于拉取源码。</li>
+                <li>Docker & Docker Compose：用于容器化安装。</li>
+                <li>Python 3.10+：用于源码安装。</li>
+                <li>Node.js 18+（如 OpenClaw 版本包含前端控制台）。</li>
+            </ul>
+            <p>执行以下命令检查环境：</p>
+            <pre><code>git --version
+python3 --version
+docker --version
+docker compose version
+node --version</code></pre>
+        </section>
+
+        <section class="guide-card" id="method-a">
+            <h3>3) 方式 A：Docker 快速安装（推荐）</h3>
+            <p>适合希望快速可用、依赖隔离、便于迁移的用户。</p>
+            <h4>步骤 1：拉取项目</h4>
+            <pre><code>git clone &lt;OPENCLAW_OFFICIAL_REPO_URL&gt; openclaw
+cd openclaw</code></pre>
+            <h4>步骤 2：复制配置文件</h4>
+            <pre><code>cp .env.example .env</code></pre>
+            <h4>步骤 3：修改关键配置</h4>
+            <pre><code># 常见配置示例
+APP_ENV=production
+APP_PORT=3000
+DATABASE_URL=postgres://openclaw:password@db:5432/openclaw
+REDIS_URL=redis://redis:6379
+OPENAI_API_KEY=your_key_here</code></pre>
+            <h4>步骤 4：启动服务</h4>
+            <pre><code>docker compose pull
+docker compose up -d</code></pre>
+            <h4>步骤 5：查看日志确认启动</h4>
+            <pre><code>docker compose ps
+docker compose logs -f --tail=200</code></pre>
+        </section>
+
+        <section class="guide-card" id="method-b">
+            <h3>4) 方式 B：源码安装（开发者常用）</h3>
+            <h4>步骤 1：创建 Python 虚拟环境</h4>
+            <pre><code>python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip setuptools wheel</code></pre>
+            <h4>步骤 2：安装后端依赖</h4>
+            <pre><code>pip install -r requirements.txt</code></pre>
+            <h4>步骤 3：安装前端依赖（若有 web 目录）</h4>
+            <pre><code>cd web
+npm install
+npm run build
+cd ..</code></pre>
+            <h4>步骤 4：初始化数据库</h4>
+            <pre><code># 以下命令根据项目文档调整
+python manage.py migrate
+python manage.py init_admin</code></pre>
+            <h4>步骤 5：启动服务</h4>
+            <pre><code>python manage.py runserver 0.0.0.0:3000</code></pre>
+        </section>
+
+        <section class="guide-card" id="config">
+            <h3>5) 配置详解（.env 与常见参数）</h3>
+            <table class="guide-table">
+                <thead>
+                    <tr><th>变量</th><th>含义</th><th>建议值</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>APP_ENV</td><td>运行环境</td><td>dev / staging / production</td></tr>
+                    <tr><td>APP_PORT</td><td>服务端口</td><td>3000（避免与其它服务冲突）</td></tr>
+                    <tr><td>DATABASE_URL</td><td>数据库连接</td><td>建议使用 PostgreSQL</td></tr>
+                    <tr><td>REDIS_URL</td><td>缓存/队列</td><td>redis://redis:6379</td></tr>
+                    <tr><td>API_KEY</td><td>模型或服务密钥</td><td>通过环境变量注入，不写入代码</td></tr>
+                </tbody>
+            </table>
+            <div class="callout">安全建议：生产环境请配合 Nginx + HTTPS，且将密钥放入 CI/CD Secret 或服务器环境变量中。</div>
+        </section>
+
+        <section class="guide-card" id="run">
+            <h3>6) 启动与验证</h3>
+            <ol>
+                <li>浏览器访问：<code>http://localhost:3000</code></li>
+                <li>健康检查接口：<code>curl http://localhost:3000/health</code></li>
+                <li>查看实时日志：<code>docker compose logs -f</code> 或源码模式下查看控制台输出。</li>
+            </ol>
+        </section>
+
+        <section class="guide-card" id="troubleshooting">
+            <h3>7) 故障排查清单</h3>
+            <ul>
+                <li><strong>端口占用：</strong><code>lsof -i :3000</code>，改用其它端口后重启。</li>
+                <li><strong>镜像拉取慢：</strong>配置镜像加速，或先 <code>docker pull</code> 分步执行。</li>
+                <li><strong>数据库连不上：</strong>确认用户名、密码、主机和防火墙策略。</li>
+                <li><strong>依赖报错：</strong>删除缓存后重新安装：<code>pip cache purge</code> / <code>npm cache clean --force</code>。</li>
+                <li><strong>权限问题：</strong>Linux 下检查目录属主：<code>sudo chown -R $USER:$USER .</code></li>
+            </ul>
+        </section>
+
+        <section class="guide-card" id="upgrade">
+            <h3>8) 升级与回滚策略</h3>
+            <h4>升级建议</h4>
+            <pre><code>git fetch --all
+git checkout &lt;target_version_tag&gt;
+docker compose pull
+docker compose up -d --remove-orphans</code></pre>
+            <h4>回滚建议</h4>
+            <ul>
+                <li>升级前备份数据库与 .env。</li>
+                <li>保留上一个稳定版本 tag。</li>
+                <li>如果异常，立即切回旧 tag 并恢复数据库快照。</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>OpenClaw 安装中文站 &copy; 2026 | 如遇差异，请以官方仓库文档为准</p>
+    </footer>
+</body>
+</html>
